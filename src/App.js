@@ -27,7 +27,7 @@ function App() {
 
     const storageRef = ref(
       storage,
-      `images/${new Date().getTime()}_${file.name}`
+      `images/${new Date().getTime()}_${file.file.name}`
     );
 
     const collectionRef = collection(db, "images/");
