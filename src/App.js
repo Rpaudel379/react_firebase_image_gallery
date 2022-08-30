@@ -6,7 +6,7 @@ import Modal from "./Modal";
 /* firebase */
 import { storage, db } from "./firebase/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 function App() {
   const [openModal, setOpenModal] = useState(false);
@@ -45,7 +45,10 @@ function App() {
       },
       () => {
         getDownloadURL(uploadImage.snapshot.ref).then(async (downloadUrl) => {
-          await addDoc(collectionRef, { url: downloadUrl });
+          await addDoc(collectionRef, {
+            url: downloadUrl,
+            timestamp: serverTimestamp(),
+          });
           setUploading(false);
         });
       }

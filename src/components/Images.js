@@ -2,21 +2,24 @@ import React, { useEffect, useState } from "react";
 
 // firebase
 import { db } from "../firebase/firebase";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 
 const Images = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, "images"), (snapshot) => {
-      let imgs = [];
-      snapshot.forEach((doc) => {
-        imgs.push({ ...doc.data(), id: doc.id });
-      });
-      setLoading(false);
-      setImages(imgs);
-    });
+    const unsub = onSnapshot(
+      query(collection(db, "images"), orderBy("timestamp", "desc")),
+      (snapshot) => {
+        let imgs = [];
+        snapshot.forEach((doc) => {
+          imgs.push({ ...doc.data(), id: doc.id });
+        });
+        setLoading(false);
+        setImages(imgs);
+      }
+    );
 
     return () => unsub();
   }, []);
@@ -38,7 +41,7 @@ const Images = () => {
                   <img
                     src={image.url}
                     alt={image.id}
-                    className="w-full h-[500px] md:h-full object-cover"
+                    className="w-full h-[z] md:h-full object-cover"
                   />
                 </div>
               ))}
